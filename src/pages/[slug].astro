@@ -4,12 +4,15 @@ import Converter from '../components/Converter.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { accents, convert } from '../engine';
 import type { Accent } from '../engine';
+import { frases } from '../content/frases';
+import { pronuncia } from '../content/pronuncia';
 export function getStaticPaths() {
   return accents.map((a) => ({ params: { slug: a.id }, props: { accent: a } }));
 }
 const { accent } = Astro.props as { accent: Accent };
 const demo = 'Oi, tudo bem? Vamos tomar um café e conversar um pouco?';
 const demoOut = convert(demo, accent, { intensity: 0.5 });
+const notes = pronuncia[accent.id] ?? [];
 const others = accents.filter((a) => a.id !== accent.id);
 const ld = JSON.stringify({
   '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: accent.glossary.slice(0, 5).map((g) => ({
@@ -31,6 +34,18 @@ const ld = JSON.stringify({
     {accent.intro.map((p) => <p>{p}</p>)}
     <p><b>Exemplo:</b> “{demo}” vira “{demoOut}”.</p>
 
+    {notes.length > 0 && (<>
+      <h2>Como se reconhece o sotaque {accent.name.toLowerCase()}</h2>
+      <ul>{notes.map((n) => <li>{n}</li>)}</ul>
+    </>)}
+
+    <h2>Frases do dia a dia em {accent.name.toLowerCase()}</h2>
+    <div class="pairs">
+      {frases.map((f) => (
+        <div class="pair"><p class="from">{f}</p><p class="to">{convert(f, accent, { intensity: 0.5 })}</p></div>
+      ))}
+    </div>
+
     <h2>Glossário {accent.name.toLowerCase()}</h2>
     <dl class="gl">
       {accent.glossary.map((g) => (
@@ -42,6 +57,7 @@ const ld = JSON.stringify({
     <ul>{accent.curiosities.map((c) => <li>{c}</li>)}</ul>
   </section>
 
+  <p><a href="/comparar">Veja a mesma frase em todos os sotaques →</a></p>
   <h2>Outros sotaques</h2>
   <ul class="tiles">
     {others.map((a) => <li><a class="tile" href={`/${a.id}`}><b>{a.emoji} {a.name}</b><small>{a.region}</small></a></li>)}

@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { accents } from '../../engine';
+---
+<Base title="Gírias por região do Brasil" description="Glossário com as gírias e expressões mais conhecidas de cada sotaque brasileiro: mineiro, carioca, paulistano, gaúcho, baiano e mais.">
+  <h1>Gírias por região do Brasil</h1>
+  <p class="lead">Os termos mais conhecidos de cada sotaque, reunidos em um só lugar.</p>
+  {accents.map((a) => (
+    <section>
+      <h2 id={a.id}>{a.emoji} {a.name} <small style="font-weight:400;color:var(--muted)">· {a.region}</small></h2>
+      <dl class="gl">
+        {a.glossary.map((g) => (
+          <div><dt>{g.term}</dt><dd>{g.meaning} <em>Ex.: “{g.example}”</em></dd></div>
+        ))}
+      </dl>
+      <p><a href={`/${a.id}`}>Converter texto para {a.name.toLowerCase()} →</a></p>
+    </section>
+  ))}
+</Base>
