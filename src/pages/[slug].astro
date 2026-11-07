@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import Converter from '../components/Converter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { accents, convert } from '../engine';
+import type { Accent } from '../engine';
+export function getStaticPaths() {
+  return accents.map((a) => ({ params: { slug: a.id }, props: { accent: a } }));
+}
+const { accent } = Astro.props as { accent: Accent };
+const demo = 'Oi, tudo bem? Vamos tomar um café e conversar um pouco?';
+const demoOut = convert(demo, accent, { intensity: 0.5 });
+const others = accents.filter((a) => a.id !== accent.id);
+const ld = JSON.stringify({
+  '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: accent.glossary.slice(0, 5).map((g) => ({
+    '@type': 'Question', name: `O que significa “${g.term}” no sotaque ${accent.name.toLowerCase()}?`,
+    acceptedAnswer: { '@type': 'Answer', text: g.meaning },
+  })),
+});
+---
+<Base title={`Conversor de sotaque ${accent.name}`}
+  description={`Converta qualquer texto para o sotaque ${accent.name.toLowerCase()} (${accent.region}). Veja gírias, glossário e curiosidades.`}>
+  <script type="application/ld+json" set:html={ld} slot="head" />
+  <h1>{accent.emoji} Conversor de sotaque {accent.name.toLowerCase()}</h1>
+  <p class="lead">{accent.tagline}</p>
+  <Converter defaultAccent={accent.id} />
+  <AdSlot slot={import.meta.env.PUBLIC_ADSENSE_SLOT_ACCENT} />
+
+  <section class="prose">
+    <h2>Sobre o sotaque {accent.name.toLowerCase()} ({accent.region})</h2>
+    {accent.intro.map((p) => <p>{p}</p>)}
+    <p><b>Exemplo:</b> “{demo}” vira “{demoOut}”.</p>
+
+    <h2>Glossário {accent.name.toLowerCase()}</h2>
+    <dl class="gl">
+      {accent.glossary.map((g) => (
+        <div><dt>{g.term}</dt><dd>{g.meaning} <em>Ex.: “{g.example}”</em></dd></div>
+      ))}
+    </dl>
+
+    <h2>Curiosidades</h2>
+    <ul>{accent.curiosities.map((c) => <li>{c}</li>)}</ul>
+  </section>
+
+  <h2>Outros sotaques</h2>
+  <ul class="tiles">
+    {others.map((a) => <li><a class="tile" href={`/${a.id}`}><b>{a.emoji} {a.name}</b><small>{a.region}</small></a></li>)}
+  </ul>
+</Base>

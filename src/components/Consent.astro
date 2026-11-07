@@ -1,0 +1,35 @@
+---
+import { SITE } from '../config';
+---
+<div id="consent" role="dialog" aria-label="Aviso de cookies">
+  <p style="margin:0 0 10px">
+    Usamos cookies para medir o uso do site e exibir anúncios. Veja a
+    <a href="/privacidade">Política de Privacidade</a>.
+  </p>
+  <button class="btn" id="consent-yes">Aceitar</button>
+  <button class="btn sec" id="consent-no">Recusar</button>
+</div>
+<script define:vars={{ client: SITE.adsenseClient ?? '' }}>
+  (function () {
+    var box = document.getElementById('consent');
+    var get = function () { try { return localStorage.getItem('consent'); } catch (e) { return null; } };
+    var set = function (v) { try { localStorage.setItem('consent', v); } catch (e) {} };
+    function loadAds() {
+      if (!client || window.__adsLoaded) return;
+      window.__adsLoaded = true;
+      var s = document.createElement('script');
+      s.async = true; s.crossOrigin = 'anonymous';
+      s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + client;
+      document.head.appendChild(s);
+      document.querySelectorAll('[data-ad]').forEach(function (el) {
+        el.hidden = false;
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      });
+    }
+    var c = get();
+    if (c === 'yes') loadAds();
+    else if (c === null && client) box.classList.add('show');
+    document.getElementById('consent-yes').onclick = function () { set('yes'); box.classList.remove('show'); loadAds(); };
+    document.getElementById('consent-no').onclick = function () { set('no'); box.classList.remove('show'); };
+  })();
+</script>

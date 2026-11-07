@@ -1,0 +1,74 @@
+---
+import { accents } from '../engine';
+interface Props { defaultAccent?: string }
+const { defaultAccent = 'mineiro' } = Astro.props;
+---
+<section class="card" id="conversor" data-default={defaultAccent}>
+  <div class="chips" role="group" aria-label="Escolha o sotaque">
+    {accents.map((a) => (
+      <button type="button" class="chip" data-accent={a.id} aria-pressed={a.id === defaultAccent}>
+        {a.emoji} {a.name.split(' ')[0]}
+      </button>
+    ))}
+  </div>
+  <div class="grid2">
+    <div>
+      <label class="fl" for="src">Seu texto</label>
+      <textarea id="src" maxlength="3000" placeholder="Escreva aqui: “Oi, tudo bem? Vamos tomar um café?”"></textarea>
+    </div>
+    <div>
+      <label class="fl" for="dst">Resultado <span id="dst-name"></span></label>
+      <div class="out empty" id="dst" aria-live="polite">A tradução aparece aqui.</div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn" id="copy" type="button">Copiar</button>
+    <a class="btn wa" id="wa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+    <button class="btn sec" id="again" type="button">🎲 Outra versão</button>
+    <button class="btn sec" id="sample" type="button">Exemplo</button>
+    <label class="range">Intensidade
+      <input id="intensity" type="range" min="0" max="1" step="0.25" value="0.5" />
+    </label>
+  </div>
+</section>
+
+<script>
+  import { convert, accentById } from '../engine';
+  const root = document.getElementById('conversor')!;
+  const src = document.getElementById('src') as HTMLTextAreaElement;
+  const dst = document.getElementById('dst')!;
+  const dstName = document.getElementById('dst-name')!;
+  const wa = document.getElementById('wa') as HTMLAnchorElement;
+  const chips = [...root.querySelectorAll<HTMLButtonElement>('.chip')];
+  const intensity = document.getElementById('intensity') as HTMLInputElement;
+  let current = root.dataset.default || 'mineiro';
+  let seed = 0;
+  const SAMPLE = 'Oi, tudo bem? Hoje eu estou muito feliz. Vamos tomar um café e conversar um pouco? Meu amigo disse que o problema é fácil de resolver.';
+
+  function render() {
+    const accent = accentById(current)!;
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.accent === current)));
+    dstName.textContent = `(${accent.name})`;
+    const text = convert(src.value, accent, { seed, intensity: Number(intensity.value) });
+    dst.textContent = text || 'A tradução aparece aqui.';
+    dst.classList.toggle('empty', !text);
+    const share = text ? `${text}\n\nTraduzido em ${location.origin}` : '';
+    wa.href = share ? `https://wa.me/?text=${encodeURIComponent(share)}` : '#';
+    wa.style.opacity = text ? '1' : '.5';
+  }
+
+  chips.forEach((c) => c.addEventListener('click', () => { current = c.dataset.accent!; seed = 0; render(); }));
+  src.addEventListener('input', () => { seed = 0; render(); });
+  intensity.addEventListener('input', render);
+  document.getElementById('again')!.addEventListener('click', () => { seed++; render(); });
+  document.getElementById('sample')!.addEventListener('click', () => { src.value = SAMPLE; seed = 0; render(); });
+  document.getElementById('copy')!.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    if (!dst.classList.contains('empty')) {
+      try { await navigator.clipboard.writeText(dst.textContent || ''); btn.textContent = 'Copiado ✓'; }
+      catch { btn.textContent = 'Não consegui copiar'; }
+      setTimeout(() => (btn.textContent = 'Copiar'), 1600);
+    }
+  });
+  render();
+</script>

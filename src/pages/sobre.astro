@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+<Base title="Sobre" description={`Conheça o ${SITE.name}, o conversor de sotaques brasileiros.`}>
+  <h1>Sobre o {SITE.name}</h1>
+  <div class="prose">
+    <p>O {SITE.name} nasceu de uma ideia simples: o português do Brasil é cheio de cores, e dá para se divertir com isso. Você escreve, escolhe um sotaque e vê como o texto soaria na boca de um mineiro, de um carioca, de um gaúcho e de outras regiões.</p>
+    <h2>Brincadeira com respeito</h2>
+    <p>O conversor é uma ferramenta de humor e curiosidade. As trocas de palavras e as regras de pronúncia são aproximações, e cada região tem variações de cidade para cidade. Evitamos propositalmente termos ofensivos ou estereótipos pejorativos.</p>
+    <h2>Como as conversões funcionam</h2>
+    <p>Usamos dicionários de gírias, regras de pronúncia e um conjunto de interjeições típicas de cada sotaque. Tudo roda no seu navegador. Nenhum texto digitado é enviado aos nossos servidores.</p>
+    <h2>Quer ajudar?</h2>
+    <p>Se você é de uma região e notou uma palavra faltando ou errada, <a href="/contato">fale com a gente</a>. As contribuições de quem vive o sotaque são o que mais melhora o site.</p>
+  </div>
+</Base>

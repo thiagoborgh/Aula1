@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+<Base title="Política de Privacidade" description={`Como o ${SITE.name} trata seus dados.`}>
+  <h1>Política de Privacidade</h1>
+  <div class="prose">
+    <p>Última atualização: novembro de 2026.</p>
+    <h2>Textos que você digita</h2>
+    <p>A conversão acontece inteiramente no seu navegador. Os textos digitados no conversor não são enviados, armazenados nem lidos por nós.</p>
+    <h2>Cookies e anúncios</h2>
+    <p>O site pode exibir anúncios do Google AdSense. O Google e seus parceiros usam cookies para exibir anúncios com base em visitas anteriores a este e outros sites. Você pode gerenciar a personalização de anúncios em <a href="https://adssettings.google.com" rel="noopener">adssettings.google.com</a> e saber mais em <a href="https://policies.google.com/technologies/ads?hl=pt-BR" rel="noopener">policies.google.com/technologies/ads</a>. Pedimos seu consentimento antes de carregar anúncios; você pode recusar e continuar usando o conversor normalmente.</p>
+    <h2>Dados de acesso</h2>
+    <p>Nossa hospedagem (Vercel) pode registrar dados técnicos de acesso, como endereço IP e tipo de navegador, para fins de segurança e desempenho.</p>
+    <h2>Seus direitos (LGPD)</h2>
+    <p>Você pode solicitar acesso, correção ou exclusão de dados pessoais que tenhamos sobre você, escrevendo para <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+  </div>
+</Base>

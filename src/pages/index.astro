@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Converter from '../components/Converter.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { accents } from '../engine';
+import { SITE } from '../config';
+const ld = JSON.stringify({
+  '@context': 'https://schema.org', '@type': 'WebApplication', name: SITE.name,
+  description: SITE.description, applicationCategory: 'EntertainmentApplication',
+  inLanguage: 'pt-BR', offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
+});
+---
+<Base>
+  <script type="application/ld+json" set:html={ld} slot="head" />
+  <h1>Conversor de sotaques do Brasil</h1>
+  <p class="lead">Escreva normalmente e veja como soaria em mineiro, carioca, paulistano, gaúcho, baiano e mais.</p>
+  <Converter defaultAccent="mineiro" />
+  <AdSlot slot={import.meta.env.PUBLIC_ADSENSE_SLOT_HOME} />
+
+  <h2 id="sotaques">Escolha um sotaque</h2>
+  <ul class="tiles">
+    {accents.map((a) => (
+      <li><a class="tile" href={`/${a.id}`}><b>{a.emoji} {a.name}</b><small>{a.region}</small></a></li>
+    ))}
+  </ul>
+
+  <section class="prose">
+    <h2>Como funciona o conversor?</h2>
+    <p>
+      Cada sotaque tem um dicionário de palavras e expressões típicas, regras de pronúncia (como o “r” que some no fim dos
+      verbos ou o chiado do “s” carioca) e as muletas e interjeições mais comuns. O texto é convertido direto no seu navegador:
+      nada do que você escreve é enviado ou guardado.
+    </p>
+    <p>
+      O resultado é uma brincadeira. Cada região do Brasil tem muitas variações, e nenhum texto escrito substitui ouvir uma pessoa de
+      verdade falando. Use o botão “Outra versão” para ver variações e “Intensidade” para controlar o quanto o sotaque aparece.
+    </p>
+    <h2>Perguntas frequentes</h2>
+    <p><b>É grátis?</b> Sim, sem cadastro.</p>
+    <p><b>Meu texto fica salvo?</b> Não. A conversão acontece no seu dispositivo.</p>
+    <p><b>Posso sugerir palavras?</b> Pode! Veja a página de <a href="/contato">contato</a>.</p>
+  </section>
+</Base>
