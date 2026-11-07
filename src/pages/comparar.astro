@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { accents, convert } from '../engine';
+import { frases } from '../content/frases';
+---
+<Base title="Comparar sotaques" description="A mesma frase dita em mineiro, carioca, paulistano, gaúcho, baiano e outros sotaques brasileiros, lado a lado.">
+  <h1>A mesma frase em todos os sotaques</h1>
+  <p class="lead">Veja como cada região do Brasil diria a mesma coisa. Clique em um sotaque para conhecer o glossário e usar o conversor.</p>
+  {frases.map((f, i) => (
+    <section class="card cmp">
+      <h2 style="margin-top:0">“{f}”</h2>
+      <ul class="cmp-list">
+        {accents.map((a) => (
+          <li><a href={`/${a.id}`}><b>{a.emoji} {a.name}</b></a><span>{convert(f, a, { intensity: 0.5 })}</span></li>
+        ))}
+      </ul>
+      {i === 2 && <AdSlot slot={import.meta.env.PUBLIC_ADSENSE_SLOT_HOME} />}
+    </section>
+  ))}
+  <p>Quer testar com o seu texto? Volte ao <a href="/">conversor</a>.</p>
+</Base>

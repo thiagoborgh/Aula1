@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import { SITE } from '../config';
+import Consent from '../components/Consent.astro';
+import { accents } from '../engine';
+interface Props { title?: string; description?: string; noindex?: boolean }
+const { title, description = SITE.description, noindex = false } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name}: ${SITE.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta name="twitter:card" content="summary" />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap">
+        <a class="logo" href="/">Sotaque<span>i</span> 🇧🇷</a>
+        <nav><a href="/#sotaques">Sotaques</a><a href="/comparar">Comparar</a><a href="/guia">Guias</a></nav>
+      </div>
+    </header>
+    <main><div class="wrap"><slot /></div></main>
+    <footer class="site">
+      <div class="wrap">
+        <p class="links">
+          {accents.slice(0, 6).map((a) => <a href={`/${a.id}`}>{a.name}</a>)}
+          <a href="/#sotaques">Ver todos</a>
+        </p>
+        <p class="links">
+          <a href="/sobre">Sobre</a><a href="/privacidade">Privacidade</a><a href="/termos">Termos</a><a href="/contato">Contato</a>
+        </p>
+        <p>© {new Date().getFullYear()} {SITE.name}. Feito com carinho e humor; os sotaques aqui são uma brincadeira, não uma regra linguística.</p>
+      </div>
+    </footer>
+    <Consent />
+  </body>
+</html>

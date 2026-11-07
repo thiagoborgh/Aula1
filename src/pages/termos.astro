@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+<Base title="Termos de Uso" description={`Termos de uso do ${SITE.name}.`}>
+  <h1>Termos de Uso</h1>
+  <div class="prose">
+    <p>O {SITE.name} é oferecido gratuitamente, para fins de entretenimento. Ao usar o site, você concorda com os termos abaixo.</p>
+    <ul>
+      <li>As conversões são aproximações humorísticas e não representam a fala real de nenhuma pessoa ou região.</li>
+      <li>Não use o site para criar conteúdo ofensivo, discriminatório ou que humilhe pessoas ou grupos.</li>
+      <li>O serviço é fornecido “como está”, sem garantia de disponibilidade ou de exatidão.</li>
+      <li>Podemos alterar estes termos a qualquer momento; o uso contínuo implica concordância.</li>
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+<Base title="Contato" description={`Fale com a equipe do ${SITE.name}.`}>
+  <h1>Contato</h1>
+  <div class="prose">
+    <p>Dúvidas, sugestões de gírias, correções ou parcerias: escreva para <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+    <p>Respondemos assim que possível, normalmente em até alguns dias úteis.</p>
+  </div>
+</Base>
